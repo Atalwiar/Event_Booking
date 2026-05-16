@@ -11,7 +11,7 @@ app.use(express.urlencoded({extended: true}));
 app.use("/api/auth",router);
 
 app.get("/",(req,res)=>{
-  res.send("hello");
+  res.send("hello 2");
 })
 
 app.listen(
