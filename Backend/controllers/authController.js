@@ -14,6 +14,8 @@ const Register = async (req,res)=>{
  const user = User.create({name,email,password:hashPassword});
  if(user){
   res.status(201).send("User created");
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log(`OTP for ${email} is ${otp}`);
  } else{
   res.status(400).send("User not created");
  }
