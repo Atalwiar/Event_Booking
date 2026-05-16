@@ -1,6 +1,6 @@
+import User from "../model/User.js";
 
-
-const Ragister = async (req,res)=>{
+const Register = async (req,res)=>{
   res.send("Ragister")
 }
 
@@ -12,5 +12,5 @@ const verifyOpt = async (req,res)=>{
   res.send("verifyOpt")
 }
 
-export {Login,Ragister,verifyOpt}
+export {Login,Register,verifyOpt}
 
