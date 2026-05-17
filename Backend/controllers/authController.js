@@ -1,7 +1,7 @@
 import User from "../model/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import sendEmail from "../utils/email.js";
+import { sendEmail } from "../utils/email.js";
 import OTP from "../model/OTP.js";
 // Register Api
 const register = async (req, res) => {
@@ -82,7 +82,49 @@ const login = async (req, res) => {
 
 // Verify Api
 const verifyOtp = async (req, res) => {
-  res.send("verifyOtp");
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "email and otp are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).json({ message: "Account already verified" });
+    }
+
+    const otpDoc = await OTP.findOne({
+      email,
+      otp: otp.toString(),
+      action: "account_verification",
+    });
+
+    if (!otpDoc) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    user.isVerified = true;
+    await user.save();
+    await OTP.deleteMany({ email, action: "account_verification" });
+
+    return res.status(200).json({
+      message: "Account verified successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message || "OTP verification failed" });
+  }
 };
 
 export { login, register, verifyOtp };
