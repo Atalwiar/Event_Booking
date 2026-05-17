@@ -9,14 +9,14 @@ const OTP = new mongoose.Schema({
     type:String,
     required:true
   },
-  action{
+  action:{
     type:String,
     enum:['account_verification','resetpassword'],
   },
   createdAt:{
     type:Date,
     default:Date.now(),
-    expire:300
+    expires:300
   }
 })
 
