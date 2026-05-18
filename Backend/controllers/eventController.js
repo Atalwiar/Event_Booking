@@ -31,5 +31,34 @@ const createEvent = async (req,res) => {
   }
 }
 
+const updateEvent = async (req,res) => {
+  try{
+  const {id} = req.params;
+  const result = await Event.findByIdAndUpdate(id, req.body);
+  if(result){
+    res.status(200).json({message:"the user updated",result});
+  }else{
+     res.status(404).json({message:"the user not updated"});
+  }
+  }catch(error){
+    res.status(500).json({ message: error.message });
+    
+  }
+}
 
-export {getAllEvents};
+const deleteEvent = async (req,res) => {
+  try{
+    const {id} = req.params;
+    const result = await Event.findByIdAndDelete(id);
+    if(result){
+      res.status(200).json({message:"the user deleted",result});
+    }else{
+       res.status(404).json({message:"the user not deleted"});
+    }
+  }catch(error){
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
+export {getAllEvents, getEventById, createEvent, updateEvent, deleteEvent};
